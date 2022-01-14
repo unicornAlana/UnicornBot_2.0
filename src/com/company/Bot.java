@@ -7,7 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-
+/**
+ * The Bot class loads itself up with questions from a text file.
+ * It can produce questions as requested, in order.
+ * Some goals for the future: Teach the Bot to record the answers.
+ * Or equip the bot to load different question sets from different keywords.
+ */
 public class Bot {
     Language preferredLanguage;
     String userName;
@@ -28,7 +33,7 @@ public class Bot {
     private void loadQuestions(String filename) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
-            String nextLine = null;
+            String nextLine;
             while (!((nextLine = br.readLine()) ==null)) {
                 Question q = new Question();
                 q.addQuestion(Language.ENGLISH, nextLine);
@@ -36,13 +41,15 @@ public class Bot {
                 questions.add(q);
             }
             br.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * This method produces the default greeting for every quiz, in the preferred
+     * @return the greeting, in the preferred language, as a String.
+     */
     public String greeting() {
         if (preferredLanguage == Language.ENGLISH) {
             return "Hello, I'm a Bot. I'm going to ask you some questions, since that's the only thing I can do. What's your name?";
@@ -54,7 +61,7 @@ public class Bot {
     }
 
     public String languageSelection() {
-        String result = "";
+        String result;
         result = "Do you want to talk to the bot in English or Spanish? \n ¿Quieres hablar con el bot en Inglés o en Español?";
         return result;
     }
@@ -67,12 +74,17 @@ public class Bot {
         questions.add(q);
     }
 
+    /**
+     * Returns True if there are still questions left in the List.
+     * @return boolean
+     */
     public boolean hasNextQuestion() {
         return (questions.size() > 0);
     }
 
-    //Plucks out the first question from the list and returns its text in the preferred language.
-    public String getNextQuestion() {
+    /**Plucks out the first question from the list and returns its text in the preferred language.
+    */
+     public String getNextQuestion() {
         return questions.remove(0).getQuestionText(preferredLanguage);
     }
 
